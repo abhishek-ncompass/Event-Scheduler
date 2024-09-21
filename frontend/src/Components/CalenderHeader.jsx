@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from "react";
 import {
-  Calendar,
-  Whisper,
-  Popover,
-  Badge,
   Modal,
   Form,
   Button,
@@ -12,9 +8,9 @@ import {
 import "rsuite/dist/rsuite.min.css";
 import "../styles/CalenderHeader.css";
 import { useNavigate } from "react-router-dom";
-import io from "socket.io-client"; 
+import io from "socket.io-client";
 
-const socket = io.connect("http://localhost:3005"); 
+const socket = io.connect("http://localhost:3005");
 
 const CalendarHeader = () => {
   const [open, setOpen] = useState(false);
@@ -77,6 +73,7 @@ const CalendarHeader = () => {
       .then((data) => console.log(data))
       .catch((error) => console.error(error));
     setOpen(false);
+    alert(`Event created successfully`)
   };
 
   useEffect(() => {
@@ -92,7 +89,7 @@ const CalendarHeader = () => {
     return () => {
       socket.off("event_invitation");
     };
-  }, [email]); 
+  }, [email]);
 
   return (
     <header className="calendar-header">

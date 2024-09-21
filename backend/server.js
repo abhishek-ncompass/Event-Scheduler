@@ -2,9 +2,9 @@ const express = require("express");
 const app = express();
 const http = require("http");
 const { Server } = require("socket.io");
-const cors = require('cors'); 
+const cors = require('cors');
 
-app.use(cors()); 
+app.use(cors());
 
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -31,7 +31,8 @@ io.on("connection", (socket) => {
   });
 
   socket.on("new_event", (eventData) => {
-    
+    io.emit("new_event", eventData);
+
     eventData.participants.forEach((participantEmail) => {
       const participantSocketId = Object.keys(connectedUsers).find(
         (socketId) => connectedUsers[socketId] === participantEmail
