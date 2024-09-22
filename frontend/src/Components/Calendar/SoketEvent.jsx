@@ -25,7 +25,7 @@ function useSocketEvents(email) {
           <br />
           <strong>Created By:</strong> {eventData.createdBy}
         </Message>,
-        { placement: "topEnd", duration: 4000 }
+        { placement: "bottomEnd", duration: 4000 }
       );
     });
 

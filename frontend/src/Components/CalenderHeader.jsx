@@ -12,12 +12,12 @@ const socket = io.connect("http://localhost:3000");
 
 const CalendarHeader = () => {
   const [open, setOpen] = useState(false);
+  const [datetime, setDatetime] = useState([new Date(), new Date( )]);
   const [formValue, setFormValue] = useState({
     title: '',
     description: '',
     participants: '',
   });
-  const [datetime, setDatetime] = useState([new Date(), new Date()]);
 
   const navigate = useNavigate();
   const toaster = useToaster();
@@ -65,16 +65,32 @@ const CalendarHeader = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        if (data.statusCode === 201) {
+          toaster.push(
+            <Message showIcon type="success">
+              {data.message}
+            </Message>,
+            { placement: 'topCenter', duration: 4000 }
+          );
+        } else {
+          toaster.push(
+            <Message showIcon type="error" closable>
+              {data.message}
+            </Message>,
+            { placement: 'topCenter', duration: 4000 }
+          );
+        }
+      })
+      .catch((error) => {
+        console.error(error);
         toaster.push(
-          <Message showIcon type="success">
-            Event created successfully!
+          <Message showIcon type="error" closable>
+            Failed to create event
           </Message>,
           { placement: 'topCenter', duration: 4000 }
         );
-      })
-      .catch((error) => console.error(error));
-    setOpen(false);
+      });
+    setOpen(false);    
   };
 
   return (

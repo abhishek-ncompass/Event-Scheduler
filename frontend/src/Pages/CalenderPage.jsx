@@ -26,7 +26,7 @@ function CalendarPage() {
         });
         const data = await response.json();
 
-        const parsedEvents = data.map((event) => ({
+        const parsedEvents = data.data.map((event) => ({
           ...event,
           start: new Date(event.startDateTime),
           end: new Date(event.endDateTime),
