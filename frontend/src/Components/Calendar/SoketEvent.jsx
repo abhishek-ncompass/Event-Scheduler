@@ -1,9 +1,8 @@
-// SocketEvents.js
 import { useEffect } from 'react';
 import { useToaster, Message } from 'rsuite';
 import io from 'socket.io-client';
 
-const socket = io.connect("http://localhost:3005");
+const socket = io.connect("http://localhost:3000");
 
 function useSocketEvents(email) {
   const toaster = useToaster();

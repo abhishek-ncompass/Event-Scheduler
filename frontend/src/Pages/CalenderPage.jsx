@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Calendar } from "rsuite";
+import io from "socket.io-client";
 import renderCell from "../Components/Calendar/RenderCell";
 import ShowEventModal from "../Components/Calendar/ShowEventModal";
-import io from "socket.io-client";
+import useEventHandlers from "../utils/CalenderUtils";
 import "rsuite/dist/rsuite.min.css";
 import "../styles/CalenderPage.css";
-import useEventHandlers from "../utils/CalenderUtils";
 
-const socket = io.connect("http://localhost:3005");
+const socket = io.connect("http://localhost:3000");
 
 function CalendarPage() {
   const [events, setEvents] = useState([]);

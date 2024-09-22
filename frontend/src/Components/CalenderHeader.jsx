@@ -8,7 +8,7 @@ import { io } from 'socket.io-client';
 import 'rsuite/dist/rsuite.min.css';
 import '../styles/CalenderHeader.css';
 
-const socket = io.connect("http://localhost:3005");
+const socket = io.connect("http://localhost:3000");
 
 const CalendarHeader = () => {
   const [open, setOpen] = useState(false);

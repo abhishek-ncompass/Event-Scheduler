@@ -53,6 +53,7 @@ function Signup() {
   };
 
   return (
+    <div className="container">
     <div className="form-container">
       <p className="title">Signup</p>
       <form className="form" onSubmit={handleSubmit}>
@@ -85,6 +86,7 @@ function Signup() {
           <Link to="/">Log in</Link>
         </span>
       </p>
+    </div>
     </div>
   );
 }
