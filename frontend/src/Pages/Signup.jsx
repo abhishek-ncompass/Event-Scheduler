@@ -1,20 +1,26 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useToaster, Message } from "rsuite";
 import "../styles/Login.css";
 
 function Signup() {
   const [firstname, setFirstName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
-
   const navigate = useNavigate();
+  const toaster = useToaster();
+
+  const showToast = (type, message) => {
+    toaster.push(
+      <Message showIcon type={type}>
+        {message}
+      </Message>,
+      { placement: "topCenter" }
+    );
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null);
-    setSuccess(null);
 
     try {
       const response = await fetch("http://localhost:3000/user/signup", {
@@ -26,20 +32,23 @@ function Signup() {
       });
 
       const data = await response.json();
+      console.log("Raw response data:", data); // Log the entire response data
 
-      if (data && data.data) {
-        localStorage.setItem("token", data.data.token);
-        localStorage.setItem("email", data.data.user.email);
-        localStorage.setItem("userId", data.data.user.userid);
-        setSuccess("Login successful!");
-        console.log(data.data);
+      if (response.ok) {
+        // Use optional chaining to safely access properties
+        localStorage.setItem("token", data.token ?? "");
+        localStorage.setItem("email", data.email ?? data.user?.email ?? "");
+        localStorage.setItem("userId", data.userId ?? data.user?.userid ?? "");
+
+        showToast("success", "Signup successful!");
         navigate("/", { replace: true });
       } else {
-        throw new Error("Signup failed. Please check your credentials.");
+        // Handle error responses from the server
+        throw new Error(data.message || "Signup failed. Please try again.");
       }
     } catch (err) {
-      setError(err.message);
-      setSuccess(null);
+      console.error("Signup error:", err);
+      showToast("error", err.message);
     }
   };
 
@@ -68,15 +77,13 @@ function Signup() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <p className="page-link">
-          <span className="page-link-label">Forgot Password?</span>
-        </p>
         <button className="form-btn">Signup</button>
-        {error && <p className="error">{error}</p>}
-        {success && <p className="success">{success}</p>}
       </form>
       <p className="sign-up-label">
-        Already have an account?<span className="sign-up-link"><Link to="/">Log in</Link></span>
+        Already have an account?
+        <span className="sign-up-link">
+          <Link to="/">Log in</Link>
+        </span>
       </p>
     </div>
   );

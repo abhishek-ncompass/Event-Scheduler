@@ -4,8 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./Route/ProtectedRoute";
 import Signup from "./Pages/Signup";
 import CalendarHeader from "./Components/CalenderHeader";
-import Calendar from "./Components/Calender";
-import Home from "./Pages/Home";
+import CalendarPage from "./Pages/CalenderPage";
 
 function App() {
   return (
@@ -20,7 +19,7 @@ function App() {
             element={
               <>
                 <CalendarHeader /> 
-                <Calendar />
+                <CalendarPage />
               </>
             }
           />

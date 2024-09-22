@@ -3,13 +3,18 @@
     justify-content: space-between;
     align-items: center;
     padding: 16px;
-    background-color: #f0f0f0;
+    background-color: #501455;
     border-bottom: 1px solid #ddd;
   }
   
   .calendar-header-left {
     display: flex;
     align-items: center;
+    color: white;
+  }
+
+  .calendar-header h2{
+    color: white;
   }
   
   .calendar-header-title {
@@ -30,8 +35,10 @@
     font-size: 16px;
     cursor: pointer;
     margin-left: 8px;
+    color: #501455;
   }
   
   .calendar-header-button:hover {
-    background-color: #f5f5f5;
+    background-color: #80008c;
+    color: white;
   }
