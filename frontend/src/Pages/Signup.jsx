@@ -23,7 +23,7 @@ function Signup() {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:3000/user/signup", {
+      const response = await fetch(import.meta.env.VITE_SIGNUP_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -32,10 +32,10 @@ function Signup() {
       });
 
       const data = await response.json();
-      console.log("Raw response data:", data); // Log the entire response data
+      console.log("Raw response data:", data);
 
       if (response.ok) {
-        // Use optional chaining to safely access properties
+        
         localStorage.setItem("token", data.token ?? "");
         localStorage.setItem("email", data.email ?? data.user?.email ?? "");
         localStorage.setItem("userId", data.userId ?? data.user?.userid ?? "");
@@ -43,7 +43,6 @@ function Signup() {
         showToast("success", "Signup successful!");
         navigate("/", { replace: true });
       } else {
-        // Handle error responses from the server
         throw new Error(data.message || "Signup failed. Please try again.");
       }
     } catch (err) {

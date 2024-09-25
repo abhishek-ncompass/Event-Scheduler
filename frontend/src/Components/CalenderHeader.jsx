@@ -2,13 +2,10 @@
 import React, { useState } from 'react';
 import { useToaster, Message } from 'rsuite';
 import { useNavigate } from 'react-router-dom';
-import useSocketEvents from './Calendar/SoketEvent';
+import useSocketEvents from '../Hooks/useSocketEvents';
 import EventCreationModal from './Calendar/CreateEvent';
-import { io } from 'socket.io-client';
 import 'rsuite/dist/rsuite.min.css';
 import '../styles/CalenderHeader.css';
-
-const socket = io.connect("http://localhost:3000");
 
 const CalendarHeader = () => {
   const [open, setOpen] = useState(false);
@@ -53,9 +50,7 @@ const CalendarHeader = () => {
       createdBy: email,
     };
 
-    socket.emit('new_event', eventData);
-
-    fetch('http://localhost:3000/event/create', {
+    fetch(import.meta.env.VITE_CREATE_EVENT, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

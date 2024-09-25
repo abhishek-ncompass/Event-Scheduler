@@ -28,8 +28,8 @@ function ShowEventModal({ open, onClose, modalTitle, selectedDayEvents }) {
                 {new Date(event.endDateTime).toLocaleString()}
               </p>
               <p>
-                <strong>Created By:</strong> {event?.createdBy?.firstname} (
-                {event.createdBy.email})
+                <strong>Created By:</strong>{" "}
+                {event?.createdBy?.firstname} ({event?.createdBy?.email})
               </p>
             </div>
           ))

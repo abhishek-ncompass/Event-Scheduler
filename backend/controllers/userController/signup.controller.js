@@ -37,7 +37,7 @@ const signup = async (req, res) => {
     try {
         const checkExistingUser = await queryFn(existingUser, [email]);
         if (checkExistingUser.rows.length > 0) {
-            throw new CustomError([{ message: "User already Exists with this email." }], 400);
+            return customResponse(res, 401, "User already Exists with this email.", null, true);
         }
 
         const hashedPassword = await passwordHash(password);

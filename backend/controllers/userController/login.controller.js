@@ -8,41 +8,40 @@ const _loginUser = `
     SELECT 
         email,
         password,
-        userid
+        userid,
+        firstname
     FROM 
         users 
     WHERE 
         email = $1`;
 
-
-const login = async(req, res) => {
-    const { email, password } = req.body;
-
-    if (!email || !password) {
-        throw new CustomError([{ message: "All fields are required." }], 400);
-    }
-
+const login = async (req, res) => {
     try {
+        const { email, password } = req.body;
+
+        if (!email || !password) {
+            return customResponse(res, 400, "All fields are required.", null, true);
+        }
+
         const user = await queryFn(_loginUser, [email]);
-        if (user.rows.length === 0) {
-            throw new CustomError([{ message: "Invalid User ID or Password" }], 401);
+
+        if (!user.rows.length) {
+            return customResponse(res, 401, "Invalid User ID or Password", null, true);
         }
 
         const isPasswordValid = await comparePassword(password, user.rows[0].password);
+
         if (!isPasswordValid) {
-            throw new CustomError([{ message: "Invalid User ID or password" }], 401);
+            return customResponse(res, 401, "Invalid User ID or password", null, true);
         }
 
-        // Use the generateToken function to create a token
         const token = generateToken(user.rows[0]);
         const payload = { email: user.rows[0].email, userid: user.rows[0].userid };
+
         return customResponse(res, 200, "Login successful", { user: payload, token });
     } catch (error) {
-        if (error instanceof CustomError) {
-            return customResponse(res, error.status, error.message, null, true);
-        }
         console.error("Error during login:", error);
-        return customResponse(res, 400, "SOMETHING WENT WRONG", null, true);
+        return customResponse(res, 500, "Internal Server Error", null, true);
     }
 };
 

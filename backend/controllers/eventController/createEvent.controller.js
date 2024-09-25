@@ -30,6 +30,15 @@ const _addParticipant = `
   VALUES
     ($1, $2)`;
 
+const _getUserInfo = `
+  SELECT
+    EMAIL,
+    FIRSTNAME
+  FROM
+    USERS
+  WHERE
+    USERID = $1`;
+
 async function createEvent(req, res) {
   const { title, description, startDateTime, endDateTime, participants } =
     req.body;
@@ -57,7 +66,22 @@ async function createEvent(req, res) {
 
     await Promise.all(participantQueries);
 
-    customResponse(res, 201, "Event created successfully");
+    const userInfoResult = await queryFn(_getUserInfo, [userid]);
+    const { email, firstname } = userInfoResult.rows[0];
+
+    customResponse(res, 201, "Event created successfully", {
+      event: {
+        title,
+        description,
+        startDateTime,
+        endDateTime,
+        createdBy: {
+          userid,
+          email,
+          firstname
+        }
+      }
+    });
   } catch (error) {
     if (error instanceof CustomError) {
       customResponse(res, error.status, error.message, null, true);
