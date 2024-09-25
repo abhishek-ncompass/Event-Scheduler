@@ -39,9 +39,6 @@ function useSocketEvents(email) {
       socket.off("event_invitation");
     };
 
-    return () => {
-      socket.off("event_invitation");
-    };
   }, [email, toaster]);
 }
 
