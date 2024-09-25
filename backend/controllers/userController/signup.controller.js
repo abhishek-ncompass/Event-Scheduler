@@ -1,4 +1,4 @@
-const queryFn = require("../../utils/queryFunction");
+const {queryFn} = require("../../utils/queryFunction");
 const { passwordHash } = require('../../utils/bcryptHashing');
 const generateToken = require("../../service/generateToken");
 const { customResponse } = require("../../utils/customResponse");

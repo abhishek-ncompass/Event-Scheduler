@@ -3,7 +3,6 @@ function useEventHandlers(events, setSelectedDayEvents, setOpen, setModalTitle) 
     const dayEvents = events.filter(
       (event) => event.start.toDateString() === date.toDateString()
     );
-    console.log(dayEvents)
     setSelectedDayEvents(dayEvents);
     setOpen(true);
     setModalTitle(`Events for ${date.toLocaleDateString()}`);

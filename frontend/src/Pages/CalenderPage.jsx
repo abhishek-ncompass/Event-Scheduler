@@ -19,16 +19,13 @@ function CalendarPage() {
   
   const toaster = useToaster();
   const handleNewEvent = (eventData) => {
-    console.log("baosdknfsadf")
     const newEvent = {
       ...eventData,
       start: new Date(eventData.start),
       end: new Date(eventData.end),
     };
-    console.log('new Events: -----', newEvent)
     
     useSocketEvents(email);
-    // Update the events state to include the new event
     setEvents((prevEvents) => [...prevEvents, newEvent]);
   };
 
@@ -51,41 +48,7 @@ function CalendarPage() {
   };
 
   useEffect(() => {
-    // const fetchEvents = async () => {
-    //   try {
-    //     const token = localStorage.getItem("token");
-    //     const response = await fetch(import.meta.env.VITE_GET_EVENTS, {
-    //       headers: { Authorization: `Bearer ${token}` },
-    //     });
-    //     const data = await response.json();
-    //     // console.log("data.....data.....", data.data)
-    //     const parsedEvents = data.data.map((event) => ({
-    //       ...event,
-    //       start: new Date(event.startDateTime),
-    //       end: new Date(event.endDateTime),
-    //     }));
-    //     // console.log("Holaaaaa",parsedEvents)
-    //     setEvents(parsedEvents);
-    //     // console.log("evennnnnnnnnts",events)
-    //   } catch (err) {
-    //     setError(err.message);
-    //   }
-    // };
-
     fetchEvents();
-    console.log('after fetch', events)
-    // const handleNewEvent = (eventData) => {
-    //   const newEvent = {
-    //     ...eventData,
-    //     start: new Date(eventData.start),
-    //     end: new Date(eventData.end),
-    //   };
-    //   console.log('new Events: -----', newEvent)
-      
-    //   useSocketEvents(email);
-    //   // Update the events state to include the new event
-    //   setEvents((prevEvents) => [...prevEvents, newEvent]);
-    // };
     socket.on("event_invitation", handleNewEvent);
     socket.on("new_event", handleNewEvent)
     return () => {

@@ -4,7 +4,7 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const http = require('http');
 const { Server } = require('socket.io');
-const queryFn = require('./utils/queryFunction');
+const {queryFn} = require('./utils/queryFunction');
 
 dotenv.config();
 
@@ -36,9 +36,7 @@ let connectedUsers = {};
 io.on('connection', (socket) => {
   console.log(`User connected: ${socket.id}`);
   
-  console.log("email nahi Aaya !")
   socket.on('login', (email) => {
-    console.log("email Aaya ?")
     connectedUsers[socket.id] = email;
     console.log(`User logged in: ${email} with socket ID: ${socket.id}`);
     io.emit('online_users', Object.values(connectedUsers).map((email, index) => ({ email, id: Object.keys(connectedUsers)[index] })));
@@ -54,9 +52,7 @@ io.on('connection', (socket) => {
 // -----------------------------    Notification Send Functionality     -----------------------------
 async function handleNewEventNotification(payload) {
   const eventData = JSON.parse(payload);
-  console.log("New Event Data", eventData)
   const userData = await queryFn('SELECT email, firstname FROM users WHERE userid = $1', [eventData.createdby]);
-  console.log(userData.rows[0])
   const newEventData = {
     ...eventData,
     startDateTime: eventData.startdatetime,
@@ -69,19 +65,14 @@ async function handleNewEventNotification(payload) {
 
   // Query the participant table to get the participant emails
   const participantData = await queryFn('SELECT userid FROM participants WHERE eventid = $1', [eventData.eventid]);
-  console.log(participantData.rows)
 
   // Query the users table to get the participant emails
   const participantEmails = await queryFn('SELECT email FROM users WHERE userid = ANY($1)', [participantData.rows.map(participant => participant.userid)]);
-  console.log(participantEmails.rows)
 
   // Emit the event_invitation event to each participant
   participantEmails.rows.forEach((participant) => {
     const participantSocketId = Object.keys(connectedUsers).find((socketId) => connectedUsers[socketId] === participant.email);
-    console.log("sockets: ----------", participantSocketId)
     if (participantSocketId) {
-      console.log("bhej diya invite")
-      console.log("participant--------", newEventData)
       io.to(participantSocketId).emit('event_invitation', newEventData);
     }
   });
@@ -96,13 +87,12 @@ const client = new Client({
   database: process.env.DATABASE,
 });
 
-client.connect().then(() => console.log('connected triggers pg'));
+client.connect();
 
 client.query('LISTEN new_event');
 
 client.on('notification', (msg) => {
   if (msg.channel === 'new_event') {
-    console.log(msg.payload)
     handleNewEventNotification(msg.payload);
   }
 });

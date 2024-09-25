@@ -32,7 +32,6 @@ function Signup() {
       });
 
       const data = await response.json();
-      console.log("Raw response data:", data);
 
       if (response.ok) {
         

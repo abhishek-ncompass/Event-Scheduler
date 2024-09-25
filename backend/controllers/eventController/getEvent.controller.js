@@ -1,4 +1,4 @@
-const queryFn = require("../../utils/queryFunction");
+const {queryFn} = require("../../utils/queryFunction");
 const CustomError = require("../../utils/CustomError");
 const { customResponse } = require("../../utils/customResponse");
 

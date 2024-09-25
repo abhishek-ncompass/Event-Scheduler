@@ -22,4 +22,4 @@ const queryFn = async (sql, params) => {
 };
 
 
-module.exports = queryFn;
+module.exports = {queryFn, client};

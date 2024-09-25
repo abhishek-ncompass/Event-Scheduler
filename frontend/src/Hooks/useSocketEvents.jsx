@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useToaster, Message } from 'rsuite';
 import io from 'socket.io-client';
 
-const socket = io.connect("http://localhost:3000");
+const socket = io.connect(import.meta.env.VITE_SOCKET_URL);
 
 function useSocketEvents(email) {
   const toaster = useToaster();

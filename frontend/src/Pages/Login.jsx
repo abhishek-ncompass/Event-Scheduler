@@ -37,7 +37,6 @@ function Login() {
         localStorage.setItem("email", data.data.user.email);
         localStorage.setItem("userId", data.data.user.userid); 
         showToast('success', 'Login successful!');
-        console.log(data.data);
         navigate("/home", { replace: true });
       } else {
         throw new Error("Login failed. Please check your credentials.");
