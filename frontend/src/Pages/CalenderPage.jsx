@@ -54,6 +54,7 @@ function CalendarPage() {
       setEvents((prevEvents) => [...prevEvents, newEvent]);
     };
     socket.on("event_invitation", handleNewEvent);
+    socket.on("new_event", handleNewEvent)
     return () => {
       socket.off("event_invitation", handleNewEvent);
     };

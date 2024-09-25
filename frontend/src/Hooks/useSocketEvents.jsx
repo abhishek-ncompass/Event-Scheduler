@@ -11,6 +11,12 @@ function useSocketEvents(email) {
     socket.emit("login", email);
 
     socket.on("event_invitation", (eventData) => {
+      const startDateTime = eventData.startDateTime.replace('T', ' ').replace('Z', '');
+      const endDateTime = eventData.endDateTime.replace('T', ' ').replace('Z', '');
+    
+      const startDate = new Date(startDateTime);
+      const endDate = new Date(endDateTime);
+    
       toaster.push(
         <Message showIcon type="info" closable>
           You have a new event invitation!
@@ -19,16 +25,19 @@ function useSocketEvents(email) {
           <br />
           <strong>Description:</strong> {eventData.description}
           <br />
-          <strong>Start:</strong> {new Date(eventData.startDateTime).toLocaleString()}
+          <strong>Start:</strong> {startDate.toLocaleString()}
           <br />
-          <strong>End:</strong> {new Date(eventData.endDateTime).toLocaleString()}
+          <strong>End:</strong> {endDate.toLocaleString()}
           <br />
-          <strong>Created By:</strong> {eventData?.createdBy?.firstname} (
-            {email})
+          <strong>Created By:</strong> {eventData?.createdBy?.firstname} ({email})
         </Message>,
         { placement: "bottomEnd", duration: 4000 }
       );
     });
+    
+    return () => {
+      socket.off("event_invitation");
+    };
 
     return () => {
       socket.off("event_invitation");

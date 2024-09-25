@@ -59,8 +59,8 @@ async function handleNewEventNotification(payload) {
   console.log(userData.rows[0])
   const newEventData = {
     ...eventData,
-    start: eventData.startdatetime,
-    end: eventData.enddatetime,
+    startDateTime: eventData.startdatetime,
+    endDateTime: eventData.enddatetime,
     createdBy: {
       email: userData.rows[0].email,
       firstname: userData.rows[0].firstname,
@@ -81,9 +81,11 @@ async function handleNewEventNotification(payload) {
     console.log("sockets: ----------", participantSocketId)
     if (participantSocketId) {
       console.log("bhej diya invite")
+      console.log("participant--------", newEventData)
       io.to(participantSocketId).emit('event_invitation', newEventData);
     }
   });
+  io.emit("new_event", newEventData)
 }
 
 // -----------------------------    Listen for PostgreSQL Notifications     -----------------------------

@@ -5,11 +5,8 @@ import ProtectedRoute from "./Route/ProtectedRoute";
 import CalendarHeader from "./Components/CalenderHeader";
 import CalendarPage from "./Pages/CalenderPage";
 import "./App.css";
-import { useState } from "react";
 
 function App() {
-
-  const [events, setEvents] = useState([]);
   return (
     <Router>
       <Routes>
