@@ -1,6 +1,6 @@
 const {queryFn} = require("../../utils/queryFunction");
 const CustomError = require("../../utils/CustomError");
-const { customResponse } = require("../../utils/customResponse");
+const tryCatchFunction = require("../../utils/tryCatchFunction");
 
 const _createEvent = `
   INSERT INTO
@@ -44,7 +44,7 @@ async function createEvent(req, res) {
     req.body;
   const { userid } = req.user;
 
-  try {
+  const createEventOperation = async () => {
     if (!title || !description || !startDateTime || !endDateTime) {
       throw new CustomError([{ message: "Missing required fields" }], 400);
     }
@@ -69,7 +69,7 @@ async function createEvent(req, res) {
     const userInfoResult = await queryFn(_getUserInfo, [userid]);
     const { email, firstname } = userInfoResult.rows[0];
 
-    customResponse(res, 201, "Event created successfully", {
+    return {
       event: {
         title,
         description,
@@ -81,15 +81,10 @@ async function createEvent(req, res) {
           firstname
         }
       }
-    });
-  } catch (error) {
-    if (error instanceof CustomError) {
-      customResponse(res, error.status, error.message, null, true);
-    } else {
-      console.error(error);
-      customResponse(res, 500, "Failed to create event", null, true);
-    }
-  }
+    };
+  };
+
+  tryCatchFunction(createEventOperation, res, "Event created successfully", "Failed to create event");
 }
 
 module.exports = createEvent;

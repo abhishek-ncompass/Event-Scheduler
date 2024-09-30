@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useToaster, Message } from 'rsuite';
-import "../styles/Login.css"
+import "../styles/Login.css";
+import apiRequest from "../utils/apiRequest";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -22,15 +23,7 @@ function Login() {
     e.preventDefault();
 
     try {
-      const response = await fetch(import.meta.env.VITE_LOGIN_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
+      const data = await apiRequest(import.meta.env.VITE_LOGIN_URL, 'POST', { email, password });
 
       if (data && data.data) {
         localStorage.setItem("token", data.data.token);

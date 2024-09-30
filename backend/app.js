@@ -1,17 +1,18 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const cors = require('cors');
+const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 const http = require('http');
 const { Server } = require('socket.io');
+const { Client } = require('pg');
 const {queryFn} = require('./utils/queryFunction');
-
-dotenv.config();
 
 const userRoutes = require('./routers/user.router');
 const eventRoutes = require('./routers/event.router');
-const { Client } = require('pg');
+
 const app = express();
+dotenv.config();
+
 const PORT = process.env.PORT || 5000;
 
 // -----------------------------    Middleware to parse JSON bodies     -----------------------------
@@ -63,13 +64,10 @@ async function handleNewEventNotification(payload) {
     },
   };
 
-  // Query the participant table to get the participant emails
   const participantData = await queryFn('SELECT userid FROM participants WHERE eventid = $1', [eventData.eventid]);
 
-  // Query the users table to get the participant emails
   const participantEmails = await queryFn('SELECT email FROM users WHERE userid = ANY($1)', [participantData.rows.map(participant => participant.userid)]);
 
-  // Emit the event_invitation event to each participant
   participantEmails.rows.forEach((participant) => {
     const participantSocketId = Object.keys(connectedUsers).find((socketId) => connectedUsers[socketId] === participant.email);
     if (participantSocketId) {

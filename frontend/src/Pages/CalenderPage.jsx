@@ -7,6 +7,7 @@ import ShowEventModal from "../Components/Calendar/ShowEventModal";
 import useEventHandlers from "../Hooks/useEventHandlers";
 import "rsuite/dist/rsuite.min.css";
 import "../styles/CalenderPage.css";
+import apiRequest from "../utils/apiRequest";
 
 const socket = io.connect(import.meta.env.SOCKET_URL);
 function CalendarPage() {
@@ -28,14 +29,11 @@ function CalendarPage() {
     useSocketEvents(email);
     setEvents((prevEvents) => [...prevEvents, newEvent]);
   };
-
+  
+  const token = localStorage.getItem("token");
   const fetchEvents = async () => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(import.meta.env.VITE_GET_EVENTS, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const data = await response.json();
+      const data = await apiRequest(import.meta.env.VITE_GET_EVENTS, 'GET', {}, token);
       const parsedEvents = data.data.map((event) => ({
         ...event,
         start: new Date(event.startDateTime),
@@ -50,7 +48,6 @@ function CalendarPage() {
   useEffect(() => {
     fetchEvents();
     socket.on("event_invitation", handleNewEvent);
-    socket.on("new_event", handleNewEvent)
     return () => {
       socket.off("event_invitation", handleNewEvent);
     };
