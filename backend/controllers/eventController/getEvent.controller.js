@@ -1,6 +1,5 @@
 const {queryFn} = require("../../utils/queryFunction");
-const CustomError = require("../../utils/CustomError");
-const { customResponse } = require("../../utils/customResponse");
+const tryCatchFunction = require("../../utils/tryCatchFunction");
 
 const _getEvents = `
   SELECT 
@@ -24,11 +23,11 @@ const _getEvents = `
 async function getEvents(req, res) {
   const { userid } = req.user;
 
-  try {
+  const retrieveEvents = async () => {
     const values = [userid];
     const eventResult = await queryFn(_getEvents, values);
 
-    const events = eventResult.rows.map((event) => {
+    return eventResult.rows.map((event) => {
       const { eventid, title, description, startdatetime, enddatetime, createdby, creator_email, creator_firstname } = event;
       return {
         eventid,
@@ -43,16 +42,9 @@ async function getEvents(req, res) {
         },
       };
     });
+  };
 
-    customResponse(res, 200, "Events retrieved successfully", events);
-  } catch (error) {
-    if (error instanceof CustomError) {
-      customResponse(res, error.status, error.message, null, true);
-    } else {
-      console.error(error);
-      customResponse(res, 500, "Failed to retrieve events", null, true);
-    }
-  }
+  tryCatchFunction(retrieveEvents, res, "Events retrieved successfully", "Failed to retrieve events"); 
 }
 
 module.exports = getEvents;

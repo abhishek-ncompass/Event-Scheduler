@@ -29,7 +29,7 @@ function useSocketEvents(email) {
           <br />
           <strong>End:</strong> {endDate.toLocaleString()}
           <br />
-          <strong>Created By:</strong> {eventData?.createdBy?.firstname} ({email})
+          <strong>Created By:</strong> {eventData?.createdBy?.firstname} ({eventData?.createdBy?.email})
         </Message>,
         { placement: "bottomEnd", duration: 4000 }
       );
